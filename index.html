@@ -1,0 +1,772 @@
+<html lang="es"><head><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GastroElite | Innovación Culinaria</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+
+  <style>
+
+    :root {
+
+      --primary-orange: #f59e0b;
+
+      --bg-dark: #0a0a0a;
+
+      --card-bg: rgba(28, 28, 30, 0.85);
+
+      --glass-border: rgba(255, 255, 255, 0.1);
+
+      --text-light: #fefefe;
+
+      --navbar-bg: rgba(10, 10, 10, 0.95);
+
+    }
+
+
+
+    [data-theme="light"] {
+
+      --bg-dark: #f1f5f9;
+
+      --card-bg: #ffffff;
+
+      --glass-border: rgba(0, 0, 0, 0.1);
+
+      --text-light: #0f172a;
+
+      --navbar-bg: rgba(255, 255, 255, 0.95);
+
+    }
+
+
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+
+    html { scroll-behavior: smooth; }
+
+    body { background-color: var(--bg-dark); color: var(--text-light); overflow-x: hidden; }
+
+
+
+    /* --- MENÚ LATERAL --- */
+
+    .menu-btn {
+
+      font-size: 1.5rem;
+
+      color: var(--text-light);
+
+      cursor: pointer;
+
+      margin-right: 15px;
+
+      display: none;
+
+      align-items: center;
+
+    }
+
+
+
+    .side-menu {
+
+      position: fixed;
+
+      top: 0;
+
+      left: -250px;
+
+      width: 250px;
+
+      height: 100%;
+
+      background: var(--navbar-bg);
+
+      backdrop-filter: blur(15px);
+
+      z-index: 2001;
+
+      padding: 80px 30px;
+
+      border-right: 1px solid var(--glass-border);
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 20px;
+
+    }
+
+
+
+    .side-menu.active { left: 0; }
+
+
+
+    .side-menu a {
+
+      text-decoration: none;
+
+      color: var(--text-light);
+
+      font-weight: 600;
+
+      font-size: 1rem;
+
+      text-transform: uppercase;
+
+    }
+
+
+
+    .side-menu a.active-mobile {
+
+      color: var(--primary-orange) !important;
+
+    }
+
+
+
+    .close-btn {
+
+      position: absolute;
+
+      top: 25px;
+
+      right: 25px;
+
+      font-size: 1.5rem;
+
+      cursor: pointer;
+
+      color: var(--primary-orange);
+
+    }
+
+
+
+    /* --- ANIMACIONES TÍTULOS --- */
+
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
+
+    @keyframes zoomInUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+
+
+
+    .reveal-left, .reveal-zoom, .reveal-right { opacity: 0; }
+
+    .active-left { animation: slideInLeft 1s ease-out forwards; }
+
+    .active-zoom { animation: zoomInUp 1s ease-out forwards; }
+
+    .active-right { animation: slideInRight 1s ease-out forwards; }
+
+
+
+    /* --- FLIP CARD UNIVERSAL --- */
+
+    .creadores-grid, .multimedia-grid { display: grid; gap: 30px; margin-top: 40px; perspective: 1000px; }
+
+    .creadores-grid { grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); }
+
+    .multimedia-grid { grid-template-columns: repeat(3, 1fr); }
+
+
+
+    .flip-card { background-color: transparent; height: 450px; perspective: 1000px; }
+
+    .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
+
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+
+    .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); }
+
+    .flip-card-front { background-color: #222; }
+
+    .flip-card-front img { width: 100%; height: 100%; object-fit: cover; }
+
+    
+
+    .flip-card-back {
+
+      background-color: var(--card-bg);
+
+      color: var(--text-light);
+
+      transform: rotateY(180deg);
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      padding: 30px;
+
+      text-align: left;
+
+      border: 1px solid var(--primary-orange);
+
+    }
+
+    .flip-card-back h3, .flip-card-back h4 { color: var(--primary-orange); margin-bottom: 10px; }
+
+    .flip-card-back p { font-size: 0.85rem; line-height: 1.5; color: var(--text-light); opacity: 0.9; }
+
+
+
+    /* --- NAVBAR --- */
+
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: var(--navbar-bg); backdrop-filter: blur(15px); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
+
+    .logo-container { display: flex; align-items: center; }
+
+    .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-orange); letter-spacing: 1px; }
+
+    .nav-links { display: flex; list-style: none; gap: 30px; }
+
+    .nav-links li a { text-decoration: none; color: var(--text-light); text-transform: uppercase; font-size: 0.75rem; font-weight: 600; }
+
+    .nav-links li a.active { color: var(--primary-orange); border-bottom: 2px solid var(--primary-orange); padding-bottom: 5px; }
+
+    
+
+    /* BOTÓN DE TEMA */
+
+    .theme-toggle {
+
+      font-size: 1.4rem;
+
+      cursor: pointer;
+
+      color: var(--primary-orange);
+
+      background: none;
+
+      border: none;
+
+      display: flex;
+
+      align-items: center;
+
+    }
+
+
+
+    /* --- SERVICIOS --- */
+
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 25px; margin: 40px auto 0; max-width: 1200px; }
+
+    .service-card { background: var(--card-bg); padding: 40px 30px; border-radius: 20px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; color: var(--text-light); }
+
+    .service-card:hover { transform: translateY(-10px); border-color: var(--primary-orange); }
+
+    .service-card i { font-size: 2.5rem; color: var(--primary-orange); margin-bottom: 20px; }
+
+
+
+    @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+
+    .btn-shake:hover { animation: shake 0.4s ease-in-out infinite; }
+
+
+
+    section { padding: 120px 8% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+
+    .hero-section { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+
+    .hero-content h1 { font-size: 3.5rem; line-height: 1.2; margin-bottom: 20px; min-height: 120px; }
+
+    .hero-content p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 40px; min-height: 80px; opacity: 0.9; }
+
+    .carousel-container { width: 100%; height: 450px; border-radius: 25px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+
+    .carousel-track { display: flex; width: 600%; height: 100%; }
+
+    .carousel-track img { width: 16.666%; object-fit: cover; }
+
+    
+
+    .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 2000; }
+
+
+
+    @media (max-width: 992px) {
+
+      .menu-btn { display: flex; }
+
+      .nav-links { display: none; }
+
+      .services-grid, .multimedia-grid { grid-template-columns: repeat(2, 1fr); }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .services-grid, .multimedia-grid { grid-template-columns: 1fr; }
+
+    }
+
+  </style>
+
+</head>
+
+<body data-theme="dark">
+
+
+
+  <div class="side-menu" id="sideMenu">
+
+    <i class="fas fa-times close-btn" onclick="toggleMenu()"></i>
+
+    <a href="#inicio" class="side-item active-mobile" onclick="toggleMenu()">Inicio</a>
+
+    <a href="#nosotros" class="side-item" onclick="toggleMenu()">Nosotros</a>
+
+    <a href="#servicios" class="side-item" onclick="toggleMenu()">Servicios</a>
+
+    <a href="#multimedia" class="side-item" onclick="toggleMenu()">Multimedia</a>
+
+  </div>
+
+
+
+  <nav class="navbar">
+
+    <div class="logo-container">
+
+      <div class="menu-btn" onclick="toggleMenu()">
+
+        <i class="fas fa-bars"></i>
+
+      </div>
+
+      <div class="logo">GASTRO<span style="opacity: 0.7;">ELITE</span></div>
+
+    </div>
+
+    
+
+    <ul class="nav-links">
+
+      <li><a href="#inicio" class="nav-item active">Inicio</a></li>
+
+      <li><a href="#nosotros" class="nav-item">Nosotros</a></li>
+
+      <li><a href="#servicios" class="nav-item">Servicios</a></li>
+
+      <li><a href="#multimedia" class="nav-item">Multimedia</a></li>
+
+    </ul>
+
+
+
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+
+      <i class="fas fa-moon"></i>
+
+    </button>
+
+  </nav>
+
+
+
+  <section id="inicio" class="hero-section">
+
+    <div class="hero-content">
+
+      <h1 id="typing-title">Arte Culinario &amp; Tecnología</h1>
+
+      <p id="typing-p">Fusionamos la tradición gastronómica con procesos industriales de vanguardia.</p>
+
+      <div style="display:flex; gap:15px;">
+
+        <a href="#servicios"><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:15px 35px; border-radius:8px; font-weight:bold; cursor:pointer; color: black;">Servicios de Alto Impacto</button></a>
+
+        <a href="https://wa.me/tunumero" target="_blank"><button class="btn-shake" style="background:transparent; border:1px solid var(--text-light); color:var(--text-light); padding:15px 35px; border-radius:8px; font-weight:bold; cursor:pointer;">Contacto Directo</button></a>
+
+      </div>
+
+    </div>
+
+    <div class="carousel-container">
+
+      <div class="carousel-track" id="track" style="transform: translateX(-50%);">
+
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdF9iMQuB9dUmrcJsPHqkgWrGD-ETP-p5Kzw&amp;s">
+
+        <img src="https://media.gq.com.mx/photos/5c12f182edcb802cf1e6eab7/16:9/w_2560%2Cc_limit/GettyImages-930813260.jpg">
+
+        <img src="https://www.enroma.com/wp-content/uploads/elementor/thumbs/restaurantes-de-alta-cocina-en-roma-om54px2tad9wnrpy4d2su87dycn0ku7339urzgsm68.jpg">
+
+        <img src="https://static.vecteezy.com/system/resources/previews/056/977/262/large_2x/a-chef-is-preparing-food-in-a-commercial-kitchen-free-photo.jpeg">
+
+        <img src="https://media.istockphoto.com/id/1081422898/es/foto/pan-frito-pato.jpg?b=1&amp;s=1024x1024&amp;w=0&amp;k=20&amp;c=skVZm2lvHTMl31ZPyt4I85BExjLrqIB0hx1wzlIpevE=">
+
+        <img src="https://laroussecocina.mx/wp-content/uploads/2022/04/CocinayTrabajo_portada.png">
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section id="nosotros">
+
+    <h2 class="reveal-left" data-animation="active-left" style="font-size: 2.8rem; text-align:center;">Liderazgo e <span>Innovación</span></h2>
+
+    <p style="text-align: center; max-width: 900px; margin: 25px auto; opacity: 0.9; line-height: 1.8; font-size: 1.1rem;">
+
+      En GastroElite, no solo cocinamos; redefinimos la eficiencia en el sector alimentario. Nacimos de la necesidad de cerrar la brecha entre el arte culinario artesanal y las exigencias de la industria moderna.
+
+    </p>
+
+    <div class="creadores-grid">
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://www.esan.edu.pe/images/blog/20230807/dRG7Xt.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h3>MARIA Chinchay</h3>
+
+            <p><b>Directora Culinaria</b> con especialidad en Alta Cocina por institutos europeos de renombre. Su visión estratégica combina la estética visual con la rentabilidad operativa. Experta en <b>ingeniería de menú</b>, María diseña experiencias que cautivan el paladar mientras optimizan los recursos. Su enfoque en <b>neurogastronomía</b> permite entender el comportamiento del comensal, asegurando que cada plato no solo sea una delicia, sino una herramienta de éxito comercial.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://solucionlaboralperu.com/wp-content/uploads/2024/12/gerente-de-ventas.webp"></div>
+
+          <div class="flip-card-back">
+
+            <h3>Juan Martínez</h3>
+
+            <p><b>Director Tecnológico</b> y consultor senior experto en <b>Lean Manufacturing</b> aplicado específicamente al entorno gastronómico. Juan transforma cocinas caóticas en centros de producción de alta eficiencia. Se encarga de la integración de <b>sistemas inteligentes de gestión</b> y automatización de procesos. Su metodología reduce drásticamente el desperdicio operativo y mejora los tiempos de servicio, garantizando que la tecnología sea el mejor aliado del talento humano.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section id="servicios">
+
+    <h2 class="reveal-zoom" data-animation="active-zoom" style="font-size: 2.8rem; text-align:center;">Servicios de <span>Alto Impacto</span></h2>
+
+    <div class="services-grid">
+
+      <div class="service-card"><div><i class="fas fa-utensils"></i><h3>Catering de Élite</h3><p>Brindamos servicios gastronómicos de gran escala para eventos corporativos, congresos y recepciones privadas.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px; color: black;">Saber más</button></div>
+
+      <div class="service-card"><div><i class="fas fa-robot"></i><h3>Gastro-Tecnología</h3><p>Digitalizamos su cocina. Implementamos KDS y software de gestión de inventario en tiempo real.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px; color: black;">Saber más</button></div>
+
+      <div class="service-card"><div><i class="fas fa-calculator"></i><h3>Ingeniería de Costos</h3><p>Análisis profundo de recetas y mermas para aumentar su margen de utilidad neta.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px; color: black;">Saber más</button></div>
+
+      <div class="service-card"><div><i class="fas fa-certificate"></i><h3>Formación Técnica</h3><p>Programas de entrenamiento intensivo para brigadas de cocina y protocolos HACCP.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px; color: black;">Saber más</button></div>
+
+      <div class="service-card"><div><i class="fas fa-flask"></i><h3>I+D Culinario</h3><p>Desarrollamos nuevas líneas de productos para retail y food service con laboratorio propio.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px; color: black;">Saber más</button></div>
+
+      <div class="service-card"><div><i class="fas fa-route"></i><h3>Cadena de Suministro</h3><p>Estructuramos canales de distribución eficientes y proveedores sostenibles.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px; color: black;">Saber más</button></div>
+
+    </div>
+
+  </section>
+
+
+
+  <section id="multimedia">
+
+    <h2 class="reveal-right" data-animation="active-right" style="font-size: 2.8rem; text-align:center; margin-bottom:50px;">Nuestra <span>Operación en Acción</span></h2>
+
+    <div class="multimedia-grid">
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://www.winterhalter.com/fileadmin/user_upload/Website/Colombia/Blog_Colombia/personal_de_cocina_profesional.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h4>Producción de Alto Volumen</h4>
+
+            <p>Nuestra infraestructura logística está diseñada para mantener la máxima calidad en producciones masivas. Utilizamos procesos de <b>estandarización rigurosa</b> que aseguran que el plato número 1,000 tenga exactamente el mismo sabor y presentación que el primero.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://pentalearning.com/wp-content/uploads/2017/04/gastrocoaching.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h4>Liderazgo Estratégico</h4>
+
+            <p>Entendemos que el corazón de una cocina es su equipo. Nuestras sesiones de <b>Gastro-Coaching</b> están orientadas a empoderar a los líderes de Alimentos y Bebidas, mejorando la comunicación asertiva bajo presión y técnicas de resolución de conflictos.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://www.hola.com/horizon/landscape/5343e1a503b0-cocineros-coach-t.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h4>Workshops de Vanguardia</h4>
+
+            <p>Capacitamos a profesionales en las tendencias más recientes. Desde el dominio del <b>Sous-Vide</b> hasta la aplicación de hidrocoloides en la <b>cocina molecular</b> contemporánea, permitiendo que las brigadas dominen nuevas texturas y métodos.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://media.scoolinary.app/images/2024/05/350_Pesaque_Listado.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h4>Arte en el Emplatado</h4>
+
+            <p>La vista es el primer sentido que degusta. Aplicamos principios de <b>diseño visual y colorimetría</b> en cada montaje. Cada emplatado es estudiado para generar un impacto psicológico positivo, utilizando técnicas de guarnición vanguardistas.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://media.scoolinary.app/images/2024/05/350_Pesaque_Banner.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h4>Laboratorio Creativo</h4>
+
+            <p>Dedicamos un espacio exclusivo a la <b>Investigación y Desarrollo (I+D)</b>. Aquí experimentamos con ingredientes locales y técnicas globales para crear firmas gastronómicas únicas y analizar la estabilidad organoléptica de las preparaciones.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="flip-card">
+
+        <div class="flip-card-inner">
+
+          <div class="flip-card-front"><img src="https://www.reasonwhy.es/media/library/take_a_restaurant.jpg"></div>
+
+          <div class="flip-card-back">
+
+            <h4>Consultoría de Espacios</h4>
+
+            <p>Diseñamos cocinas bajo conceptos de <b>ergonomía industrial</b>. Optimizamos el flujo de trabajo para reducir desplazamientos innecesarios, lo que se traduce en mayor rapidez de servicio y menor fatiga para el personal operativo.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <a href="https://wa.me/tunumero" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+
+
+  <script>
+
+    function toggleMenu() {
+
+      const menu = document.getElementById('sideMenu');
+
+      menu.classList.toggle('active');
+
+    }
+
+
+
+    // --- CAMBIO DE TEMA ---
+
+    function toggleTheme() {
+
+      const body = document.body;
+
+      const btn = document.getElementById('themeToggle');
+
+      const icon = btn.querySelector('i');
+
+      
+
+      if (body.getAttribute('data-theme') === 'dark') {
+
+        body.setAttribute('data-theme', 'light');
+
+        icon.classList.replace('fa-moon', 'fa-sun');
+
+      } else {
+
+        body.setAttribute('data-theme', 'dark');
+
+        icon.classList.replace('fa-sun', 'fa-moon');
+
+      }
+
+    }
+
+
+
+    const titleText = "Arte Culinario & Tecnología";
+
+    const pText = "Fusionamos la tradición gastronómica con procesos industriales de vanguardia.";
+
+    let isTyping = false;
+
+
+
+    function typeWriter(text, elementId, speed, callback) {
+
+      let i = 0; const element = document.getElementById(elementId);
+
+      element.innerHTML = "";
+
+      function type() { if (i < text.length) { element.innerHTML += text.charAt(i); i++; setTimeout(type, speed); } else if (callback) callback(); }
+
+      type();
+
+    }
+
+
+
+    const observerOptions = {
+
+      threshold: 0.1,
+
+      rootMargin: "0px 0px -40% 0px"
+
+    };
+
+
+
+    const observer = new IntersectionObserver((entries) => {
+
+      entries.forEach(entry => {
+
+        const ani = entry.target.dataset.animation;
+
+        const id = entry.target.getAttribute("id");
+
+        
+
+        if (entry.isIntersecting) {
+
+          if (ani) entry.target.classList.add(ani);
+
+          if (id === "inicio" && !isTyping) {
+
+            isTyping = true;
+
+            typeWriter(titleText, "typing-title", 50, () => {
+
+              typeWriter(pText, "typing-p", 30, () => isTyping = false);
+
+            });
+
+          }
+
+          if (id) {
+
+            document.querySelectorAll('.nav-item').forEach(link => link.classList.remove('active'));
+
+            document.querySelectorAll('.side-item').forEach(link => link.classList.remove('active-mobile'));
+
+
+
+            const targetNavLink = document.querySelector(`.nav-item[href="#${id}"]`);
+
+            const targetSideLink = document.querySelector(`.side-item[href="#${id}"]`);
+
+            if (targetNavLink) targetNavLink.classList.add('active');
+
+            if (targetSideLink) targetSideLink.classList.add('active-mobile');
+
+          }
+
+        } else if (ani) {
+
+          entry.target.classList.remove(ani);
+
+        }
+
+      });
+
+    }, observerOptions);
+
+
+
+    document.querySelectorAll('section, h2[data-animation]').forEach(el => observer.observe(el));
+
+
+
+    const track = document.getElementById('track');
+
+    let idx = 0; setInterval(() => { idx++; if(idx >= 6) idx = 0; track.style.transform = `translateX(-${idx * (100/6)}%)`; }, 2500);
+
+  </script>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ef58e8eda4f0314',t:'MTc3NjcwMjg3MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; visibility: hidden;"></iframe><script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;bfc8195e85744160b44197f69f2a2442&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+
+<veepn-lock-screen><template shadowrootmode="open"><style>html{box-sizing:border-box;text-size-adjust:100%;word-break:normal;tab-size:4}*,:before,:after{background-repeat:no-repeat;box-sizing:border-box}:before,:after{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0;color:inherit;border:0;border-top:1px solid}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none!important}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-color:inherit;text-indent:0}iframe{border-style:none}input{border-radius:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit;color:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit],[role=button]{cursor:pointer}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button,html [type=button],[type=reset],[type=submit]{appearance:auto}button,input,select,textarea{background-color:transparent;border-style:none}button:-moz-focusring,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{outline:1px dotted ButtonText}select{appearance:none}a:focus,button:focus,input:focus,select:focus,textarea:focus{outline-width:0}select::-ms-expand{display:none}select::-ms-value{color:currentcolor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{appearance:auto;color:inherit;font:inherit}[disabled]{cursor:default}img{border-style:none}progress{vertical-align:baseline}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled=true]{cursor:default}ul,ol{list-style-type:none}figure{margin:0}@keyframes slide-in{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.gradient-blue{background:radial-gradient(106.41% 128.47% at 50.15% 128.47%,#23abff,#3066ff)}.gradient-green{background:radial-gradient(92.26% 118.88% at 50.15% .13%,#00c3c3,#00aab3)}.gradient-purple{background:radial-gradient(165.12% 115.56% at 50.15% .13%,#a15aff,#00a0eb)}.bg-blue{background-color:#f2f5ff}.bg-purple{background-color:#f7f0ff}.bg-green{background-color:#ebffed}.lock-screen{font-family:FigtreeVF,sans-serif;letter-spacing:normal;position:fixed;z-index:2147483638;right:24px;bottom:24px;width:327px;border-radius:24px;overflow:hidden;box-shadow:0 24px 32px #00000014;animation:slide-in .3s ease-in-out forwards}.lock-screen__content{position:relative;padding:24px 24px 64px}.lock-screen__close{position:absolute;top:16px;right:16px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;opacity:.5}.lock-screen__label{height:26px;width:fit-content;border-radius:50px;background-color:#fff3;padding-inline:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:12px;line-height:18px;margin:-8px auto 16px}.lock-screen__title{color:#fff;text-align:center;font-size:20px;line-height:28px;font-weight:600;margin-bottom:8px}.lock-screen__description{color:#f5f6f7;text-align:center;font-size:14px;line-height:20px}.lock-screen__description b{font-weight:600}.lock-screen__card{position:relative;z-index:1;margin-top:-44px;background-color:#fff;border-radius:24px;padding:32px 20px 20px}.lock-screen__inner{margin-bottom:24px}.lock-screen__submit{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px;height:40px;width:100%;border-radius:12px;padding-inline:16px;background-color:#f70;color:#fff;margin-bottom:16px}.lock-screen__skip{display:flex;align-items:center;justify-content:center;font-size:14px;line-height:20px;color:#82829c;margin-inline:auto}.price-card{border:1px solid #f2f2fc;background:linear-gradient(254.14deg,#fafbff .04%,#f5f8ff 100.04%);border-radius:24px;padding:24px 28px}.price-card__label{color:#4a5764;text-align:center;font-size:14px;line-height:20px;text-transform:uppercase;margin-bottom:16px}.price-card__price{display:flex;justify-content:center;align-items:flex-start;column-gap:2px;margin-bottom:12px}.price-card__currency{color:#515478;font-size:18px;line-height:28px}.price-card__number{color:#14142a;text-align:center;font-size:64px;line-height:54px}.price-card__wrap{display:flex;flex-direction:column}.price-card__decimal{color:#515478;font-size:18px;line-height:28px;font-weight:600}.price-card__period{color:#515478;font-size:14px;line-height:20px;margin-top:-6px}.price-card__discount{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:12px}.price-card__discount-divider{position:absolute;z-index:0;top:50%;left:0;width:100%;height:1px;background-color:#dbe2f9;transform:translateY(-50%)}.price-card__discount-icon{position:absolute;z-index:1;top:50%;left:50%;transform:translate(-50%,-50%)}.price-card__discount-text{position:relative;z-index:2;color:#fff;font-size:12px;font-weight:600;line-height:18px}.price-card__features{display:flex;align-items:center;justify-content:center;column-gap:16px}.price-card__feature{color:#222e3a;font-size:14px;line-height:20px;display:flex;align-items:center;gap:6px}.price-card__feature:before{content:"";display:block;width:4px;height:4px;background-color:#20df9e;border-radius:50%;flex-shrink:0}.features-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.features-list__item{display:flex;flex-direction:column;align-items:center;gap:6px}.features-list__icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center}.features-list__text{color:#293a53;text-align:center;font-size:16px;line-height:24px;letter-spacing:-.1px}</style></template><style>@font-face{font-family:FigtreeVF;src:url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2) format("woff2 supports variations"),url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2) format("woff2-variations");font-weight:100 1000;font-display:swap}</style></veepn-lock-screen><veepn-intro-offer><template shadowrootmode="open"><style>html{box-sizing:border-box;text-size-adjust:100%;word-break:normal;tab-size:4}*,:before,:after{background-repeat:no-repeat;box-sizing:border-box}:before,:after{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0;color:inherit;border:0;border-top:1px solid}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none!important}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-color:inherit;text-indent:0}iframe{border-style:none}input{border-radius:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit;color:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit],[role=button]{cursor:pointer}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button,html [type=button],[type=reset],[type=submit]{appearance:button}button,input,select,textarea{background-color:transparent;border-style:none}button:-moz-focusring,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{outline:1px dotted ButtonText}select{appearance:none}a:focus,button:focus,input:focus,select:focus,textarea:focus{outline-width:0}select::-ms-expand{display:none}select::-ms-value{color:currentcolor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{appearance:button;color:inherit;font:inherit}[disabled]{cursor:default}img{border-style:none}progress{vertical-align:baseline}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled=true]{cursor:default}ul,ol{list-style-type:none}figure{margin:0}@keyframes slide-in{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.offer-popup{font-family:FigtreeVF,sans-serif;position:fixed;right:16px;bottom:16px;z-index:2147483638;width:327px;border-radius:12px;overflow:hidden;background-color:#fff;box-shadow:0 0 16px #293a5333;animation:slide-in .3s ease-in-out forwards}.offer-popup__close{position:absolute;top:8px;right:8px;z-index:1;width:24px;height:24px;cursor:pointer;opacity:.5}.offer-popup__header{background:radial-gradient(50.52% 128.47% at 50.15% 128.47%,#23abff,#3066ff);padding:24px 24px 12px}.offer-popup__title{font-weight:700;font-size:20px;line-height:28px;text-align:center;color:#fff;margin:0}.offer-popup__main{padding:24px 20px 32px}.offer-popup__subtitle{color:#293a53;font-size:22px;line-height:32px;text-align:center;margin:0 0 24px}.offer-popup__subtitle span{color:#f70}.offer-popup__list{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.offer-popup__item{display:flex;flex-direction:column;align-items:center;row-gap:6px;text-align:center;color:#293a53;font-size:16px;line-height:24px}.offer-popup__icon{margin:0;display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;background-color:#ebefff}.offer-popup__footer{padding:0 20px 20px;display:flex;flex-direction:column;row-gap:16px}.offer-popup__submit{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;height:40px;border-radius:12px;padding-inline:16px;background-color:#f70;color:#fff;cursor:pointer}.offer-popup__cancel{display:flex;align-items:center;justify-content:center;font-weight:400;font-size:14px;color:#82829c;cursor:pointer}</style></template><style>@font-face{font-family:FigtreeVF;src:url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2) format("woff2 supports variations"),url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2) format("woff2-variations");font-weight:100 1000;font-display:swap}</style></veepn-intro-offer></body></html>
