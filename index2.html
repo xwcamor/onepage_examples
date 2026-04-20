@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Gianella Ramos | Makeup Artist</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+ <style>
+  :root {
+   --primary-orange: #fb7185; /* Un rosa blush elegante para maquillaje */
+   --bg-dark: #0f172a;
+   --card-bg: rgba(30, 41, 59, 0.85);
+   --glass-border: rgba(255, 255, 255, 0.1);
+   --text-light: #fefefe;
+   --navbar-bg: rgba(15, 23, 42, 0.95);
+  }
+
+  [data-theme="light"] {
+   --bg-dark: #fff1f2;
+   --card-bg: #ffffff;
+   --glass-border: rgba(0, 0, 0, 0.1);
+   --text-light: #881337;
+   --navbar-bg: rgba(255, 255, 255, 0.95);
+  }
+
+  [data-theme="gourmet"] { /* Tema Luxe/Gold */
+   --bg-dark: #1c1917;
+   --card-bg: #292524;
+   --glass-border: rgba(214, 158, 46, 0.2);
+   --text-light: #fafaf9;
+   --primary-orange: #d69e2e;
+   --navbar-bg: rgba(28, 25, 23, 0.95);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+  html { scroll-behavior: smooth; }
+  body { background-color: var(--bg-dark); color: var(--text-light); overflow-x: hidden; }
+
+  /* --- MENÚ LATERAL --- */
+  .menu-btn { font-size: 1.5rem; color: var(--text-light); cursor: pointer; margin-right: 15px; display: none; align-items: center; }
+  .side-menu { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: var(--navbar-bg); backdrop-filter: blur(15px); z-index: 2001; padding: 80px 30px; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; gap: 20px; }
+  .side-menu.active { left: 0; }
+  .side-menu a { text-decoration: none; color: var(--text-light); font-weight: 600; font-size: 1rem; text-transform: uppercase; }
+  .close-btn { position: absolute; top: 25px; right: 25px; font-size: 1.5rem; cursor: pointer; color: var(--primary-orange); }
+
+  /* --- ANIMACIONES --- */
+  @keyframes slideInLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes zoomInUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+  @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+
+  .reveal-left, .reveal-zoom, .reveal-right { opacity: 0; }
+  .active-left { animation: slideInLeft 1s ease-out forwards; }
+  .active-zoom { animation: zoomInUp 1s ease-out forwards; }
+  .active-right { animation: slideInRight 1s ease-out forwards; }
+
+  /* --- FLIP CARD --- */
+  .creadores-grid, .multimedia-grid { display: grid; gap: 30px; margin-top: 40px; perspective: 1000px; }
+  .creadores-grid { grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); }
+  .multimedia-grid { grid-template-columns: repeat(3, 1fr); }
+
+  .flip-card { background-color: transparent; height: 450px; perspective: 1000px; }
+  .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
+  .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); }
+  .flip-card-front { background-color: #222; }
+  .flip-card-front img { width: 100%; height: 100%; object-fit: cover; }
+  .flip-card-back { background-color: var(--card-bg); color: var(--text-light); transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; padding: 30px; text-align: left; border: 1px solid var(--primary-orange); }
+  .flip-card-back h3, .flip-card-back h4 { color: var(--primary-orange); margin-bottom: 10px; }
+  .flip-card-back p { font-size: 0.85rem; line-height: 1.5; opacity: 0.9; }
+
+  /* --- NAVBAR --- */
+  .navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: var(--navbar-bg); backdrop-filter: blur(15px); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
+  .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-orange); letter-spacing: 2px; }
+  .nav-links { display: flex; list-style: none; gap: 30px; }
+  .nav-links li a { text-decoration: none; color: var(--text-light); text-transform: uppercase; font-size: 0.75rem; font-weight: 600; }
+  .nav-links li a.active { color: var(--primary-orange); border-bottom: 2px solid var(--primary-orange); padding-bottom: 5px; }
+  .theme-select { background: var(--card-bg); color: var(--text-light); border: 1px solid var(--glass-border); padding: 5px; border-radius: 5px; }
+
+  /* --- SERVICIOS --- */
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 40px; }
+  .service-card { background: var(--card-bg); padding: 40px 30px; border-radius: 20px; border: 1px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; }
+  .service-card:hover { transform: translateY(-10px); border-color: var(--primary-orange); }
+  .service-card i { font-size: 2.5rem; color: var(--primary-orange); margin-bottom: 20px; }
+
+  @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 100% { transform: translateX(0); } }
+  .btn-shake:hover { animation: shake 0.4s infinite; }
+
+  section { padding: 120px 8% 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .hero-section { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+  .hero-content h1 { font-size: 3.5rem; line-height: 1.2; margin-bottom: 20px; min-height: 120px; }
+  .carousel-container { width: 100%; height: 450px; border-radius: 25px; overflow: hidden; border: 1px solid var(--glass-border); }
+  .carousel-track { display: flex; width: 600%; height: 100%; transition: 0.5s; }
+  .carousel-track img { width: 16.666%; object-fit: cover; }
+  .wa-float { position: fixed; bottom: 30px; right: 30px; background: #fbcfe8;; color: #db2777; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 2000; }
+
+  @media (max-width: 992px) {
+   .menu-btn { display: flex; }
+   .nav-links { display: none; }
+   .services-grid, .multimedia-grid { grid-template-columns: repeat(2, 1fr); }
+   .hero-section { grid-template-columns: 1fr; text-align: center; }
+  }
+  @media (max-width: 600px) {
+   .services-grid, .multimedia-grid { grid-template-columns: 1fr; }
+  }
+ </style>
+</head>
+<body data-theme="dark">
+
+ <div class="side-menu" id="sideMenu">
+  <i class="fas fa-times close-btn" onclick="toggleMenu()"></i>
+  <a href="#inicio" onclick="toggleMenu()">Inicio</a>
+  <a href="#nosotros" onclick="toggleMenu()">Biografía</a>
+  <a href="#servicios" onclick="toggleMenu()">Servicios</a>
+  <a href="#multimedia" onclick="toggleMenu()">Galería</a>
+  <a href="#contacto" class="nav-link-custom">Contacto</a>
+ </div>
+
+ <nav class="navbar">
+  <div class="logo-container" style="display:flex; align-items:center;">
+   <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+   <div class="logo">MAKEUP<span style="opacity: 0.7;">BEAUTY</span></div>
+  </div>
+  <ul class="nav-links">
+   <li><a href="#inicio" class="nav-item active">Inicio</a></li>
+   <li><a href="#nosotros" class="nav-item">Biografía</a></li>
+   <li><a href="#servicios" class="nav-item">Servicios</a></li>
+   <li><a href="#multimedia" class="nav-item">Galería</a></li>
+   <li><a href="#Contacto" class="nav-item">Contacto</a></li>
+  </ul>
+  <select class="theme-select" onchange="document.body.setAttribute('data-theme', this.value)">
+   <option value="dark">Blush Dark</option>
+   <option value="light">Soft Pastel</option>
+   <option value="gourmet">Gold Luxe</option>
+  </select>
+ </nav>
+
+ <section id="inicio" class="hero-section">
+  <div class="hero-content">
+   <h1 id="typing-title"></h1>
+   <p id="typing-p"></p>
+   <div style="display:flex; gap:15px; margin-top:20px;">
+    <a href="#multimedia"><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:15px 35px; border-radius:8px; font-weight:bold; color:white; cursor:pointer;">Ver Portafolio</button></a>
+    <a href="https://wa.me/51912630571"><button class="btn-shake" style="background:transparent; border:1px solid var(--text-light); color:var(--text-light); padding:15px 35px; border-radius:8px; font-weight:bold; cursor:pointer;">Reservar Cita</button></a>
+   </div>
+  </div>
+  <div class="carousel-container">
+   <div class="carousel-track" id="track">
+    <img src="https://media.istockphoto.com/id/1296705483/es/foto/elabora-productos-basados-en-podios-blancos-sobre-fondo-rosa-en-pastel.jpg?b=1&s=170667a&w=0&k=20&c=CJxyOl1emNJrm6Aky1w0pBHdW7SoicYdj2LjZjTTNrw=">
+    <img src="https://elrincondelabelleza.com/wp-content/uploads/2024/11/tips-de-maquillaje-profesional.jpg">
+    <img src="https://i.pinimg.com/originals/fd/26/e2/fd26e210cdfe14b35a80118bf111e0a9.jpg">
+    <img src="https://i.pinimg.com/736x/24/14/cd/2414cdfe6c844af55b49c37826d168b0.jpg">
+    <img src="https://img.freepik.com/premium-photo/womans-makeup-face-woman-testing-cosmetics-beautiful-face-makeup-ai-generated_1189195-428.jpg">
+    <img src="https://t3.ftcdn.net/jpg/03/90/34/10/360_F_390341049_JvisbDMWnUFy7WatpUjVGf9NJk5HkQRt.jpg">
+   </div>
+  </div>
+ </section>
+
+ <section id="nosotros" style="padding: 100px 8%;">
+ <h2 class="reveal-left" data-animation="active-left" style="font-size: 2.8rem; text-align:center;">El Arte del <span>Maquillaje</span></h2>
+ 
+ <div style="max-width: 850px; margin: 50px auto 0; display: flex; align-items: stretch; background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 20px 40px rgba(0,0,0,0.2); flex-wrap: wrap;">
+  
+  <div style="flex: 0 0 280px; height: 450px; overflow: hidden;">
+   <img src="mi foto.jpg (1).jpeg"
+      style="width: 100%; height: 100%; object-fit: cover; border-right: 2px solid var(--primary-orange);">
+  </div>
+
+  <div style="flex: 1; padding: 50px; min-width: 300px; display: flex; flex-direction: column; justify-content: center;">
+   <span style="color: var(--primary-orange); text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; display: block;">Makeup Artist Profesional</span>
+   <h3 style="font-size: 2.2rem; margin-bottom: 15px; line-height: 1.1;">Gianella Ramos</h3>
+   
+   <div style="width: 50px; height: 3px; background: var(--primary-orange); margin-bottom: 25px;"></div>
+   
+   <p style="font-size: 1rem; line-height: 1.8; opacity: 0.8; margin-bottom: 20px;">
+    <b>Pasión por la Belleza</b>. Especialista en realzar la esencia de cada persona a través de técnicas avanzadas de color y texturas.
+   </p>
+   
+   <p style="font-size: 0.95rem; line-height: 1.7; opacity: 0.8;">
+    Con formación técnica y artística, ofrezco acabados de alta definición (HD) para fotografía, eventos sociales y novias, asegurando una piel impecable y duradera.
+   </p>
+
+   <div style="margin-top: 30px; display: flex; gap: 20px; font-size: 1.2rem; color: var(--primary-orange);">
+    <i class="fab fa-instagram" style="cursor:pointer;"></i>
+    <i class="fab fa-tiktok" style="cursor:pointer;"></i>
+    <i class="fas fa-palette" style="cursor:pointer;"></i>
+   </div>
+  </div>
+
+ </div>
+</section>
+
+ <section id="servicios">
+  <h2 class="reveal-zoom" data-animation="active-zoom" style="font-size: 2.8rem; text-align:center;">Mis <span>Servicios</span></h2>
+  <div class="services-grid">
+   <div class="service-card"><div><i class="fas fa-heart"></i><h3>Novias Luxe</h3><p>Maquillaje integral para el día más importante, incluyendo pruebas y asesoría de imagen.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; color:white; cursor:pointer; margin-top:20px;">Reservar</button></div>
+   <div class="service-card"><div><i class="fas fa-camera-retro"></i><h3>Social Glam</h3><p>Looks impactantes para fiestas y eventos sociales con técnicas de larga duración.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; color:white; cursor:pointer; margin-top:20px;">Ver Estilos</button></div>
+   <div class="service-card"><div><i class="fas fa-video"></i><h3>Editorial & TV</h3><p>Maquillaje técnico de alta definición para cámaras, producciones de moda y cine.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; color:white; cursor:pointer; margin-top:20px;">Portafolio</button></div>
+   <div class="service-card"><div><i class="fas fa-wand-magic-sparkles"></i><h3>Cursos VIP</h3><p>Talleres de automaquillaje personalizados para aprender a resaltar tus rasgos.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; color:white; cursor:pointer; margin-top:20px;">Info Aquí</button></div>
+   <div class="service-card"><div><i class="fas fa-eye"></i><h3>Diseño de Cejas</h3><p>Perfilado y sombreado para enmarcar tu mirada de forma profesional y natural.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; color:white; cursor:pointer; margin-top:20px;">Citas</button></div>
+   <div class="service-card"><div><i class="fas fa-gem"></i><h3>Gala de Gala</h3><p>Maquillaje de alta gama para alfombras rojas y graduaciones con acabado de lujo.</p></div><button class="btn-shake" style="background:var(--primary-orange); border:none; padding:12px 25px; border-radius:8px; font-weight:bold; color:white; cursor:pointer; margin-top:20px;">Cotizar</button></div>
+  </div>
+ </section>
+
+ <section id="multimedia">
+  <h2 class="reveal-right" data-animation="active-right" style="font-size: 2.8rem; text-align:center; margin-bottom:50px;">Galería <span>de Estilos</span></h2>
+  <div class="multimedia-grid">
+   <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEiX1o8YL3ad__4qnfMsSfc15STqrZ5XtkugvfDpApJXxO0aUf2NV7hSEbQ3pZ-uScqyqvK7DNgR3IEGCUvb8LoOxJABrKK2BTgwbDYUd6-rEwgoJZNWePwI02iCHvBO7lRPI3LZMqOMdJPXnJ703RFhfuZuCtdgPU0Vu3mjpKN-z__Ga4sSmDydLPpO=w480-h640"></div><div class="flip-card-back"><h4>Piel Blindada</h4><p>Técnica de alta cobertura y resistencia al agua, ideal para climas cálidos y largas jornadas.</p></div></div></div>
+   <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><img src="https://www.okchicas.com/wp-content/uploads/2020/10/Smoke-eyes-para-resaltar-mirada-5.jpg"></div><div class="flip-card-back"><h4>Smokey Eyes</h4><p>El clásico ahumado reinventado con transiciones suaves y destellos satinados.</p></div></div></div>
+   <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><img src="https://i.pinimg.com/originals/26/29/25/2629255651adb7736038d26cf84c2f1d.jpg"></div><div class="flip-card-back"><h4>Cut Crease</h4><p>Corte de cuenca definido para una mirada dramática y sofisticada en eventos nocturnos.</p></div></div></div>
+  <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><img src="https://i.pinimg.com/736x/f4/03/28/f40328c531f08ddc8cd4c4da3d6ecd4b.jpg"></div><div class="flip-card-back"><h4>Bridal Glow</h4><p>Efecto de piel iluminada desde adentro, centrado en la elegancia y la naturalidad nupcial.</p></div></div></div>
+   <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><img src="https://i.pinimg.com/originals/9c/bc/6e/9cbc6e44a38d288d24b1398a4906e28b.jpg"></div><div class="flip-card-back"><h4>Color Glam</h4><p>Explosión cromática con armonía, ideal para portadas de revistas y arte conceptual.</p></div></div></div>
+   <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><img src="https://i.pinimg.com/736x/18/c4/a4/18c4a42ac291a2ebcd904cffc18e88f9.jpg"></div><div class="flip-card-back"><h4>Soft Focus</h4><p>Acabado aterciopelado que minimiza poros y líneas de expresión, perfecto para fotografía.</p></div></div></div>
+
+  </div>
+ </section>
+
+ <a href="https://wa.me/51912630571" class="wa-float"><i class="fab fa-whatsapp"></i></a>
+
+ <script>
+  function toggleMenu() { document.getElementById('sideMenu').classList.toggle('active'); }
+
+  const titleText = "Belleza en Cada Trazo";
+  const pText = "Resaltando tu mejor versión con técnicas profesionales de maquillaje y cuidado estético.";
+  let isTyping = false;
+
+  function typeWriter(text, elementId, speed, callback) {
+   let i = 0; const element = document.getElementById(elementId);
+   element.innerHTML = "";
+   function type() { if (i < text.length) { element.innerHTML += text.charAt(i); i++; setTimeout(type, speed); } else if (callback) callback(); }
+   type();
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+   entries.forEach(entry => {
+    const ani = entry.target.dataset.animation;
+    const id = entry.target.getAttribute("id");
+    if (entry.isIntersecting) {
+     if (ani) entry.target.classList.add(ani);
+     if (id === "inicio" && !isTyping) {
+      isTyping = true;
+      typeWriter(titleText, "typing-title", 50, () => {
+       typeWriter(pText, "typing-p", 30, () => isTyping = false);
+      });
+     }
+     if (id) {
+      document.querySelectorAll('.nav-item').forEach(link => {
+       link.classList.remove('active');
+       if (link.getAttribute('href') === `#${id}`) link.classList.add('active');
+      });
+     }
+    }
+   });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('section, h2[data-animation]').forEach(el => observer.observe(el));
+  const track = document.getElementById('track');
+  let idx = 0; setInterval(() => { idx++; if(idx >= 6) idx = 0; track.style.transform = `translateX(-${idx * (100/6)}%)`; }, 3000);
+ </script>
+ <footer id="seccion-contacto" style="background: var(--navbar-bg); padding: 80px 8% 40px; border-top: 1px solid var(--glass-border); margin-top: 50px;">
+  <div style="text-align: center;">
+   
+   <p style="font-size: 1.4rem; font-weight: 600; color: var(--primary-orange); margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+    MAKEUP BEAUTY.
+   </p>
+   
+   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; text-align: left; margin-top: 30px;">
+    <div>
+     <h4 style="color: var(--primary-orange); margin-bottom: 20px; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Menú</h4>
+     <ul style="list-style: none; line-height: 2.5; padding: 0;">
+      <li><a href="#inicio" style="color: var(--text-light); text-decoration: none; font-size: 0.95rem; opacity: 0.8;">Inicio</a></li>
+      <li><a href="#biografia" style="color: var(--text-light); text-decoration: none; font-size: 0.95rem; opacity: 0.8;">Biografia</a></li>
+      <li><a href="#servicios" style="color: var(--text-light); text-decoration: none; font-size: 0.95rem; opacity: 0.8;">Servicios</a></li>
+      <li><a href="#galeria" style="color: var(--text-light); text-decoration: none; font-size: 0.95rem; opacity: 0.8;">Galeria</a></li>
+     </ul>
+    </div>
+
+    <div>
+     <h4 style="color: var(--primary-orange); margin-bottom: 20px; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Ubicación</h4>
+     <p style="font-size: 0.95rem; opacity: 0.8; display: flex; align-items: center; gap: 10px;">
+      <i class="fas fa-map-marker-alt" style="color: var(--primary-orange);"></i> 
+      Lima Norte - Independencia (SENATI)
+     </p>
+    </div>
+
+    <div>
+     <h4 style="color: var(--primary-orange); margin-bottom: 20px; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Soporte Técnico</h4>
+     <p style="font-size: 0.95rem; opacity: 0.8; display: flex; align-items: center; gap: 10px;">
+      <i class="fas fa-envelope" style="color: var(--primary-orange);"></i> 
+      soporte@techGianellaRamos.com
+     </p>
+    </div>
+   </div>
+
+   <div style="margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--glass-border); opacity: 0.5; font-size: 0.85rem;">
+    © 2026 Tech-Gianella Ramos | Software Engineering Student.
+   </div>
+  </div>
+ </footer>
+ <script>
+ function irAlFinal() {
+  const destino = document.getElementById('seccion-contacto');
+  if (destino) {
+   destino.scrollIntoView({ behavior: 'smooth' });
+  } else {
+   // Si no encuentra el ID, baja al final de la página por defecto
+   window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+ }
+</script>
+</body>
+</html>
