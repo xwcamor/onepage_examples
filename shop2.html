@@ -1,35 +1,39 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VentWeb | Premium Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&amp;family=Montserrat:wght@800&amp;display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #003b7e;
             --primary-hover: #0056b3;
             --accent-gold: #ffcc00;
             --text-dark: #1a202c;
+            --text-muted: #64748b;
             --price-red: #e53e3e;
             --border: #edf2f7;
             --bg-light: #f0f4f8;
             --card-bg: #ffffff;
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             --glass: rgba(255, 255, 255, 0.8);
+            --input-bg: #ffffff;
+            --modal-bg: #ffffff;
         }
 
         body.dark-mode {
             --bg-light: #0f172a;
             --text-dark: #f1f5f9;
+            --text-muted: #94a3b8;
             --card-bg: #1e293b;
             --border: #334155;
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             --glass: rgba(30, 41, 59, 0.9);
+            --input-bg: #334155;
+            --modal-bg: #1e293b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; scroll-behavior: smooth; transition: background 0.3s ease; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; scroll-behavior: smooth; transition: background 0.3s ease, color 0.3s ease; }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -62,9 +66,8 @@
             text-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* AJUSTE DE LA CAJA DE BUSQUEDA */
-        .search-box { flex: 0 1 400px; display: flex; border-radius: 12px; overflow: hidden; background: white; padding: 2px; margin: 0 10px; height: 45px; }
-        .search-box input { width: 100%; padding: 0 15px; border: none; outline: none; font-size: 14px; color: #333; }
+        .search-box { flex: 0 1 400px; display: flex; border-radius: 12px; overflow: hidden; background: var(--input-bg); padding: 2px; margin: 0 10px; height: 45px; border: 1px solid var(--border); }
+        .search-box input { width: 100%; padding: 0 15px; border: none; outline: none; font-size: 14px; color: var(--text-dark); background: transparent; }
         .search-box button { background: var(--accent-gold); border: none; padding: 0 15px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
         .header-actions { display: flex; align-items: center; gap: 10px; }
@@ -95,38 +98,43 @@
         .container { display: flex; max-width: 1500px; margin: 30px auto; padding: 0 20px; gap: 30px; }
         
         aside { 
-            width: 280px; background: var(--glass); backdrop-filter: blur(10px); 
+            width: 280px; background: var(--card-bg); backdrop-filter: blur(10px); 
             padding: 30px; border-radius: 24px; height: fit-content; 
             box-shadow: var(--card-shadow); border: 1px solid var(--border);
-            position: sticky; top: 110px; transition: left 0.4s ease;
+            position: sticky; top: 110px; transition: 0.4s ease;
         }
 
         .filter-section { margin-bottom: 30px; }
         .filter-section h3 { font-size: 18px; margin-bottom: 15px; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; }
         body.dark-mode .filter-section h3 { color: var(--accent-gold); }
 
-        .price-filter { width: 100%; cursor: pointer; accent-color: var(--primary-blue); }
-        .price-values { display: flex; justify-content: space-between; font-weight: 700; margin-top: 10px; color: var(--primary-blue); }
+        .price-filter { width: 100%; cursor: pointer; accent-color: var(--accent-gold); }
+        .price-values { display: flex; justify-content: space-between; font-weight: 700; margin-top: 10px; color: var(--text-dark); }
 
         .product-grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; animation: slideUp 0.8s ease; }
 
         .card {
             background: var(--card-bg); padding: 25px; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             display: flex; flex-direction: column; border-radius: 24px; box-shadow: var(--card-shadow);
-            position: relative; overflow: hidden; border: 1px solid transparent;
+            position: relative; overflow: hidden; border: 1px solid var(--border);
         }
         .card::before { content: "NUEVO"; position: absolute; top: 15px; left: -30px; background: var(--accent-gold); color: var(--primary-blue); padding: 5px 35px; transform: rotate(-45deg); font-size: 10px; font-weight: 800; }
         
         .card:hover { transform: translateY(-15px) scale(1.02); border-color: var(--accent-gold); }
         .card img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 20px; transition: 0.5s; }
 
-        .desc-text { font-size: 13px; color: #64748b; margin-bottom: 15px; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        /* Clases auxiliares para el render */
+        .prod-brand { font-size:11px; color: var(--accent-gold); font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+        body:not(.dark-mode) .prod-brand { color: var(--primary-blue); }
+        .prod-name { font-size:16px; font-weight:700; margin:8px 0; height:45px; color: var(--text-dark); }
+        .desc-text { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
         .btn-action {
             background: var(--primary-blue); color: white; border: none; padding: 15px;
             border-radius: 14px; font-weight: 700; cursor: pointer; width: 100%; 
             transition: 0.3s; text-transform: uppercase;
         }
+        body.dark-mode .btn-action { background: #3b82f6; }
 
         .mobile-filter-trigger {
             display: none; position: fixed; bottom: 30px; left: 30px; 
@@ -142,6 +150,10 @@
             justify-content: center; font-size: 30px; box-shadow: 0 10px 25px rgba(37,211,102,0.4);
             z-index: 1000; cursor: pointer; transition: 0.3s; text-decoration: none;
         }
+
+        #qty-modal { background: var(--modal-bg); color: var(--text-dark); }
+        #side-cart { background: var(--modal-bg) !important; color: var(--text-dark); border-left: 1px solid var(--border); }
+        .cart-qty-btn { padding:12px 18px; border:none; background: var(--bg-light); cursor:pointer; font-weight:bold; color: var(--text-dark); }
 
         @media (max-width: 1000px) { 
             header { padding: 10px 4%; }
@@ -164,15 +176,15 @@
         }
         @media (max-width: 600px) { 
             .product-grid { grid-template-columns: 1fr; } 
-            .logo { display: none; } /* Ocultar logo en móviles muy pequeños para dar espacio a la búsqueda */
+            .logo { display: none; } 
         }
     </style>
 </head>
-<body>
+<body class="">
 
 <a href="https://wa.me/51900000000" class="ws-float" target="_blank">📞</a>
 <div class="mobile-filter-trigger" onclick="toggleMobileFilters()">📂</div>
-<div id="main-overlay" class="overlay" onclick="closeAll()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1500; backdrop-filter: blur(8px);"></div>
+<div id="main-overlay" class="overlay" onclick="closeAll()" style="display: none; position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1500; backdrop-filter: blur(8px);"></div>
 
 <header>
     <div class="logo" onclick="goHome()">VENTWEB</div>
@@ -209,18 +221,99 @@
             </div>
         </div>
     </aside>
-    <main class="product-grid" id="grid"></main>
+    <main class="product-grid" id="grid">
+            <div class="card">
+                <img src="https://http2.mlstatic.com/D_NQ_626158-MLA86036470486_062025-V.webp">
+                <div class="prod-brand">Apple</div>
+                <div class="prod-name">iPhone 10</div>
+                <div class="desc-text">Pantalla Super Retina de 5.8 pulgadas y sistema de cámara dual Pro.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 1850</div>
+                <button class="btn-action" onclick="openQtyModal(0)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://pe.celulares.com/fotos/xiaomi-redmi-note-11-pro-93132-g-alt.jpg">
+                <div class="prod-brand">Samsung</div>
+                <div class="prod-name">Smartphone Samsung S11 Pro</div>
+                <div class="desc-text">Potencia increíble con procesador Exynos de última generación y carga ultra rápida.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 2100</div>
+                <button class="btn-action" onclick="openQtyModal(1)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://promart.vteximg.com.br/arquivos/ids/8000907-1000-1000/image-56c7ad1931274c29aee37ded429e464e.jpg?v=638527707631370000">
+                <div class="prod-brand">Xiaomi</div>
+                <div class="prod-name">Xiaomi Redmi Note 13</div>
+                <div class="desc-text">Cámara principal de 108MP y pantalla AMOLED de 120Hz para fluidez total.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 1250</div>
+                <button class="btn-action" onclick="openQtyModal(2)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://i.blogs.es/45176e/motorola-edge-40-1/450_1000.jpeg">
+                <div class="prod-brand">Motorola</div>
+                <div class="prod-name">Motorola Edge 40</div>
+                <div class="desc-text">Diseño curvo ultradelgado con protección IP68 y cámara de alta resolución.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 1550</div>
+                <button class="btn-action" onclick="openQtyModal(3)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://hiraoka.com.pe/media/catalog/product/i/p/iphone_13_pro_sierra_blue_pdp_image_position-1a__clco_v1.jpg?quality=85&amp;bg-color=255,255,255&amp;fit=bounds&amp;height=560&amp;width=700&amp;canvas=700:560">
+                <div class="prod-brand">Apple</div>
+                <div class="prod-name">iPhone 13 Pro</div>
+                <div class="desc-text">Chip A15 Bionic, modo Cine y una batería optimizada para todo el día.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 3800</div>
+                <button class="btn-action" onclick="openQtyModal(4)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://www.peru-smart.com/wp-content/uploads/2023/08/CELU574NEGRO-256GB.jpg">
+                <div class="prod-brand">Samsung</div>
+                <div class="prod-name">Samsung Galaxy S23 Ultra</div>
+                <div class="desc-text">Fotografía nocturna avanzada y el mejor rendimiento para gaming extremo.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 3200</div>
+                <button class="btn-action" onclick="openQtyModal(5)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://plazavea.vteximg.com.br/arquivos/ids/28357477-418-418/image-c1bed31bc1ee46d088c28857fe142f44.jpg">
+                <div class="prod-brand">Xiaomi</div>
+                <div class="prod-name">Xiaomi Poco F5 Pro</div>
+                <div class="desc-text">Velocidad extrema con Snapdragon 8+ Gen 1 y pantalla WQHD+.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 1450</div>
+                <button class="btn-action" onclick="openQtyModal(6)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://claroperupoc.vtexassets.com/arquivos/ids/2143327/g84-viva-magenta.png?v=638926031751500000">
+                <div class="prod-brand">Motorola</div>
+                <div class="prod-name">Motorola Moto G84</div>
+                <div class="desc-text">Estilo premium con acabado de cuero vegano y pantalla de cine pOLED.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 1100</div>
+                <button class="btn-action" onclick="openQtyModal(7)">Añadir al carrito</button>
+            </div>
+        
+            <div class="card">
+                <img src="https://pe.tiendasishop.com/cdn/shop/files/IMG-10935081.jpg?v=1722624491">
+                <div class="prod-brand">Apple</div>
+                <div class="prod-name">iPhone 15 Pro Max</div>
+                <div class="desc-text">Titanio aeroespacial, Dynamic Island y el zoom óptico más potente.</div>
+                <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ 4200</div>
+                <button class="btn-action" onclick="openQtyModal(8)">Añadir al carrito</button>
+            </div>
+        </main>
 </div>
 
 <div id="qty-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:40px; border-radius:30px; z-index:2001; width:90%; max-width:450px; box-shadow:0 40px 100px rgba(0,0,0,0.5);">
-    <h2 id="m-name" style="font-size:24px; margin-bottom:20px; font-weight:800; color:var(--primary-blue);"></h2>
+    <h2 id="m-name" style="font-size:24px; margin-bottom:20px; font-weight:800; color:var(--text-dark);"></h2>
     <div style="display:flex; align-items:center; gap:30px; flex-wrap: wrap;">
         <img id="m-img" src="" style="width:120px; border-radius:15px; background: #f8fafc; padding: 10px;">
         <div>
-            <div style="display:flex; border:2px solid #e2e8f0; border-radius:15px; overflow:hidden; width:fit-content; background:white;">
-                <button onclick="changeQty(-1)" style="padding:12px 18px; border:none; background:#f1f5f9; cursor:pointer; font-weight:bold; color: #333;">-</button>
-                <input type="text" id="m-qty" value="1" readonly style="width:50px; text-align:center; border:none; font-weight:800; font-size:18px; color: #333;">
-                <button onclick="changeQty(1)" style="padding:12px 18px; border:none; background:#f1f5f9; cursor:pointer; font-weight:bold; color: #333;">+</button>
+            <div style="display:flex; border:2px solid var(--border); border-radius:15px; overflow:hidden; width:fit-content; background:var(--input-bg);">
+                <button onclick="changeQty(-1)" class="cart-qty-btn">-</button>
+                <input type="text" id="m-qty" value="1" readonly="" style="width:50px; text-align:center; border:none; font-weight:800; font-size:18px; color: var(--text-dark); background: transparent;">
+                <button onclick="changeQty(1)" class="cart-qty-btn">+</button>
             </div>
             <div id="m-subtotal" style="margin-top:20px; font-weight:800; color:var(--price-red); font-size: 22px;"></div>
         </div>
@@ -228,14 +321,14 @@
     <button class="btn-action" style="margin-top:35px;" onclick="confirmAdd()">CONFIRMAR Y AGREGAR</button>
 </div>
 
-<div id="side-cart" style="position: fixed; right: -450px; top: 0; width: 100%; max-width: 400px; height: 100%; background: white; z-index: 2000; transition: 0.5s; padding: 30px; display: flex; flex-direction: column; box-shadow: -15px 0 40px rgba(0,0,0,0.1);">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f5f9; padding-bottom:20px;">
-        <h2 style="font-size:24px; font-weight:800; color:var(--primary-blue);">Mi Pedido</h2>
-        <button onclick="closeAll()" style="border:none; background:none; font-size:35px; cursor:pointer; color:#94a3b8;">&times;</button>
+<div id="side-cart" style="position: fixed; right: -450px; top: 0px; width: 100%; max-width: 400px; height: 100%; z-index: 2000; transition: 0.5s; padding: 30px; display: flex; flex-direction: column; box-shadow: rgba(0, 0, 0, 0.1) -15px 0px 40px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--border); padding-bottom:20px;">
+        <h2 style="font-size:24px; font-weight:800; color:var(--text-dark);">Mi Pedido</h2>
+        <button onclick="closeAll()" style="border:none; background:none; font-size:35px; cursor:pointer; color:var(--text-muted);">×</button>
     </div>
     <div id="cart-list" style="flex:1; overflow-y:auto; margin-top:20px; padding-right: 5px;"></div>
-    <div style="background: #f8fafc; padding: 30px; border-radius: 20px; border: 1px solid #e2e8f0;">
-        <div style="display:flex; justify-content:space-between; font-size:26px; font-weight:800; color:var(--primary-blue);">
+    <div style="background: rgba(128,128,128,0.05); padding: 30px; border-radius: 20px; border: 1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; font-size:26px; font-weight:800; color:var(--text-dark);">
             <span>Total:</span>
             <span id="grand-total">S/ 0.00</span>
         </div>
@@ -244,7 +337,6 @@
 </div>
 
 <script>
-    // Se mantiene exactamente tu lógica de productos y funciones
     const products = [
         { id: 0, brand: "Apple", name: "iPhone 10", price: 1850, img: "https://http2.mlstatic.com/D_NQ_626158-MLA86036470486_062025-V.webp", desc: "Pantalla Super Retina de 5.8 pulgadas y sistema de cámara dual Pro." },
         { id: 1, brand: "Samsung", name: "Smartphone Samsung S11 Pro", price: 2100, img: "https://pe.celulares.com/fotos/xiaomi-redmi-note-11-pro-93132-g-alt.jpg", desc: "Potencia increíble con procesador Exynos de última generación y carga ultra rápida." },
@@ -292,8 +384,8 @@
         grid.innerHTML = data.map(p => `
             <div class="card">
                 <img src="${p.img}">
-                <div style="font-size:11px; color:var(--primary-blue); font-weight:800; text-transform:uppercase; letter-spacing:1px;">${p.brand}</div>
-                <div style="font-size:16px; font-weight:700; margin:8px 0; height:45px;">${p.name}</div>
+                <div class="prod-brand">${p.brand}</div>
+                <div class="prod-name">${p.name}</div>
                 <div class="desc-text">${p.desc}</div>
                 <div style="color:var(--price-red); font-size:24px; font-weight:800; margin-bottom:20px;">S/ ${p.price.toLocaleString()}</div>
                 <button class="btn-action" onclick="openQtyModal(${p.id})">Añadir al carrito</button>
@@ -349,18 +441,18 @@
             m += (item.price * item.qty);
             c += item.qty;
             return `
-                <div style="display:flex; gap:15px; margin-bottom:20px; padding:15px; background:rgba(0,0,0,0.05); border-radius:15px; border:1px solid #e2e8f0;">
+                <div style="display:flex; gap:15px; margin-bottom:20px; padding:15px; background:rgba(128,128,128,0.1); border-radius:15px; border:1px solid var(--border);">
                     <img src="${item.img}" style="width:65px; height:65px; object-fit:contain; border-radius:10px; background:white;">
                     <div style="flex:1;">
-                        <div style="font-weight:700; font-size:14px; color:var(--primary-blue);">${item.name}</div>
+                        <div style="font-weight:700; font-size:14px; color:var(--text-dark);">${item.name}</div>
                         <div style="display:flex; align-items:center; gap:12px; margin: 8px 0;">
-                            <button class="cart-qty-btn" onclick="updateCartQty(${i}, -1)">-</button>
+                            <button class="cart-qty-btn" onclick="updateCartQty(${i}, -1)" style="padding:4px 10px; border-radius:8px;">-</button>
                             <span style="font-weight:800;">${item.qty}</span>
-                            <button class="cart-qty-btn" onclick="updateCartQty(${i}, 1)">+</button>
+                            <button class="cart-qty-btn" onclick="updateCartQty(${i}, 1)" style="padding:4px 10px; border-radius:8px;">+</button>
                         </div>
                         <div style="color:var(--price-red); font-weight:800; font-size:16px;">S/ ${(item.price * item.qty).toLocaleString()}</div>
                     </div>
-                    <button onclick="remove(${i})" style="border:none; background:none; cursor:pointer; color:#94a3b8; font-size:24px;">&times;</button>
+                    <button onclick="remove(${i})" style="border:none; background:none; cursor:pointer; color:var(--text-muted); font-size:24px;">&times;</button>
                 </div>`;
         }).join('');
         badge.innerText = c;
@@ -399,5 +491,5 @@
 
     render(products);
 </script>
-</body>
-</html>
+
+</body></html>
